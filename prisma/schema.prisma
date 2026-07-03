@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+generator prismabox {
+  provider                    = "prismabox"
+  typeboxImportDependencyName = "elysia"
+  typeboxImportVariableName   = "t"
+  inputModel                  = true
+  output                      = "../src/generated/prismabox"
+}
+
+datasource db {
+  provider = "mongodb"
+}
+
+enum CategorySkill {
+  LANGUAGE
+  FRAMEWORK
+  DATABASE
+  TOOL
+}
+
+model Skill {
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  icon       String
+  color      String
+  category   CategorySkill
+  projectIds String[]      @db.ObjectId
+  projects   Project[]     @relation(fields: [projectIds], references: [id])
+}
+
+model Project {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  thumbnailId String?
+  link        String?
+  screenshots String[]
+  projectYear Int?
+  skillIds    String[] @db.ObjectId
+  skills      Skill[]  @relation(fields: [skillIds], references: [id])
+}
+
+model WorkExperience {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  role        String
+  company     String
+  companyUrl  String?
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean   @default(false)
+  description String
+  tags        String[]
+}
+
+model Education {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  degree      String
+  school      String
+  startYear   Int
+  endYear     Int?
+  gpa         String?
+  description String
+}
