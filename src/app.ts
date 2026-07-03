@@ -2,6 +2,7 @@ import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { helmet } from 'elysia-helmet'
 import { connectDB, mongoosePlugin } from './libs/mongoose'
+import { apiKeyPlugin } from './libs/apiKey'
 import { authModule } from './modules/auth'
 import { skillModule } from './modules/skill'
 import { projectModule } from './modules/project'
@@ -10,8 +11,7 @@ import { educationModule } from './modules/education'
 import { docsModule } from './modules/docs'
 import { lookupModule } from './modules/lookup'
 
-// Fail fast — prevents signing JWTs with "undefined" as the secret
-const REQUIRED_ENV = ['DATABASE_URL', 'JWT_SECRET'] as const
+const REQUIRED_ENV = ['DATABASE_URL', 'JWT_SECRET', 'API_KEY'] as const
 for (const key of REQUIRED_ENV) {
   if (!process.env[key]) throw new Error(`Missing required environment variable: ${key}`)
 }
@@ -51,12 +51,15 @@ const app = new Elysia()
       data: null,
     }
   })
-  // In serverless, onStart never fires — connectDB ensures connection before every request
+  // 1. API key check — rejects unauthorized requests before touching the DB
+  .use(apiKeyPlugin)
+  // 2. DB connection — only reached for valid requests
   .onBeforeHandle(connectDB)
-  // In local dev, onStart/onStop manage the connection lifecycle cleanly
   .use(mongoosePlugin)
-  .get('/', () => 'Portfolio API')
-  .use(docsModule)
+  // Root returns 404 — nothing to see here
+  .get('/', ({ set }) => { set.status = 404; return null })
+  // Docs only available in development
+  .use(isProd ? new Elysia() : docsModule)
   .group('/api', (app) =>
     app
       .use(authModule)
