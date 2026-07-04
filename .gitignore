@@ -48,3 +48,4 @@ src/generated/
 CLAUDE.md
 seed.ts
 .env.example
+I18N_IMPLEMENTATION.md
