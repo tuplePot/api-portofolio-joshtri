@@ -369,7 +369,7 @@ const html = /* html */ `<!DOCTYPE html>
 <span class="f-name">name</span><span class="f-sep">:        </span><span class="f-type">string</span>                                    <span class="f-required">required</span>
 <span class="f-name">icon</span><span class="f-sep">:        </span><span class="f-type">string</span>                                    <span class="f-required">required</span>
 <span class="f-name">color</span><span class="f-sep">:       </span><span class="f-type">string</span>                                    <span class="f-required">required</span>
-<span class="f-name">category</span><span class="f-sep">:    </span><span class="f-enum">LANGUAGE | FRAMEWORK | DATABASE | TOOL</span>    <span class="f-required">required</span>
+<span class="f-name">category</span><span class="f-sep">:    </span><span class="f-enum">LANGUAGE | FRAMEWORK | DATABASE | TOOL | LIBRARY | ORM</span>    <span class="f-required">required</span>
 <span class="f-name">projectIds</span><span class="f-sep">:  </span><span class="f-type">string[]</span>                                  <span class="f-optional">optional</span>
         </div>
         <div class="schema-label mt">Response 200</div>
@@ -399,7 +399,7 @@ const html = /* html */ `<!DOCTYPE html>
 <span class="f-name">name</span><span class="f-sep">:        </span><span class="f-type">string</span>
 <span class="f-name">icon</span><span class="f-sep">:        </span><span class="f-type">string</span>
 <span class="f-name">color</span><span class="f-sep">:       </span><span class="f-type">string</span>
-<span class="f-name">category</span><span class="f-sep">:    </span><span class="f-enum">LANGUAGE | FRAMEWORK | DATABASE | TOOL</span>
+<span class="f-name">category</span><span class="f-sep">:    </span><span class="f-enum">LANGUAGE | FRAMEWORK | DATABASE | TOOL | LIBRARY | ORM</span>
 <span class="f-name">projectIds</span><span class="f-sep">:  </span><span class="f-type">string[]</span>
         </div>
         <div class="schema-label mt">Response 200</div>

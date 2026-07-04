@@ -8,6 +8,8 @@ const categoryEnum = t.Union([
   t.Literal('FRAMEWORK'),
   t.Literal('DATABASE'),
   t.Literal('TOOL'),
+  t.Literal('LIBRARY'),
+  t.Literal('ORM'),
 ])
 
 const objectId = t.String({ pattern: '^[0-9a-fA-F]{24}$' })
@@ -31,7 +33,7 @@ export interface ISkill {
   name: string
   icon: string
   color: string
-  category: 'LANGUAGE' | 'FRAMEWORK' | 'DATABASE' | 'TOOL'
+  category: 'LANGUAGE' | 'FRAMEWORK' | 'DATABASE' | 'TOOL' | 'LIBRARY' | 'ORM'
   projectIds: mongoose.Types.ObjectId[]
 }
 
@@ -40,7 +42,7 @@ const SkillSchema = new Schema<ISkill>(
     name: { type: String, required: true },
     icon: { type: String, required: true },
     color: { type: String, required: true },
-    category: { type: String, enum: ['LANGUAGE', 'FRAMEWORK', 'DATABASE', 'TOOL'], required: true },
+    category: { type: String, enum: ['LANGUAGE', 'FRAMEWORK', 'DATABASE', 'TOOL', 'LIBRARY', 'ORM'], required: true },
     projectIds: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
   },
   { timestamps: true }

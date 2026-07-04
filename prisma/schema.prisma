@@ -23,6 +23,8 @@ enum CategorySkill {
   FRAMEWORK
   DATABASE
   TOOL
+  LIBRARY
+  ORM
 }
 
 model Skill {
