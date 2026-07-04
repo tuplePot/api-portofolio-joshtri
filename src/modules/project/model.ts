@@ -5,9 +5,19 @@ import mongoose, { Schema } from 'mongoose'
 
 const objectId = t.String({ pattern: '^[0-9a-fA-F]{24}$' })
 
+const i18nString = t.Object({
+  id: t.String({ maxLength: 200 }),
+  en: t.String({ maxLength: 200 }),
+})
+
+const i18nText = t.Object({
+  id: t.String({ maxLength: 2000 }),
+  en: t.String({ maxLength: 2000 }),
+})
+
 export const projectCreate = t.Object({
-  title: t.String({ maxLength: 200 }),
-  description: t.Optional(t.String({ maxLength: 2000 })),
+  title: i18nString,
+  description: t.Optional(i18nText),
   skillIds: t.Optional(t.Array(objectId)),
   thumbnailId: t.Optional(t.String({ maxLength: 255 })),
   link: t.Optional(t.String({ maxLength: 500 })),
@@ -22,9 +32,14 @@ export type ProjectUpdate = typeof projectUpdate.static
 
 // ─── Mongoose ────────────────────────────────────────────────────────────────
 
+export interface II18nString {
+  id: string
+  en: string
+}
+
 export interface IProject {
-  title: string
-  description?: string
+  title: II18nString
+  description?: II18nString
   skillIds: mongoose.Types.ObjectId[]
   thumbnailId?: string
   link?: string
@@ -32,10 +47,15 @@ export interface IProject {
   projectYear: number
 }
 
+const I18nStringSchema = new Schema<II18nString>({
+  id: { type: String, required: true },
+  en: { type: String, required: true },
+}, { _id: false })
+
 const ProjectSchema = new Schema<IProject>(
   {
-    title: { type: String, required: true },
-    description: { type: String },
+    title: { type: I18nStringSchema, required: true },
+    description: { type: I18nStringSchema },
     skillIds: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
     thumbnailId: { type: String },
     link: { type: String },

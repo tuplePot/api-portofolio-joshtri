@@ -22,7 +22,7 @@ const allowedOrigins = [
   'http://localhost:4321',
   'http://localhost:5173',
   'http://localhost:5174',
-  process.env.FRONTEND_URL,
+  ...(process.env.FRONTEND_URLS?.split(',').map(url => url.trim()) ?? []),
 ].filter((o): o is string => Boolean(o))
 
 const app = new Elysia()
