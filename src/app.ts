@@ -10,6 +10,7 @@ import { workExperienceModule } from './modules/work-experience'
 import { educationModule } from './modules/education'
 import { docsModule } from './modules/docs'
 import { lookupModule } from './modules/lookup'
+import { deployModule } from './modules/deploy'
 
 const REQUIRED_ENV = ['DATABASE_URL', 'JWT_SECRET', 'API_KEY'] as const
 for (const key of REQUIRED_ENV) {
@@ -68,6 +69,7 @@ const app = new Elysia()
       .use(projectModule)
       .use(workExperienceModule)
       .use(educationModule)
+      .use(deployModule)
   )
 
 export default app

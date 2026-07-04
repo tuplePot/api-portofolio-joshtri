@@ -9,7 +9,7 @@ export const guard = new Elysia({ name: 'guard' })
       exp: '7d',
     })
   )
-  .resolve(async ({ jwt, headers }) => {
+  .resolve({ as: 'scoped' }, async ({ jwt, headers }) => {
     const auth = headers['authorization']
 
     if (!auth?.startsWith('Bearer '))
