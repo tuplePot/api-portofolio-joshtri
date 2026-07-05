@@ -3,12 +3,18 @@ import { ok, fail } from '../../libs/response'
 
 export abstract class ProjectService {
   static async findAll() {
-    const projects = await Project.find().populate('skillIds').lean()
+    const projects = await Project.find()
+      .populate('skillIds')
+      .populate('relatedProjectIds', '_id title type thumbnailId')
+      .lean()
     return ok(projects, 'Projects fetched successfully')
   }
 
   static async findById(id: string) {
-    const project = await Project.findById(id).populate('skillIds').lean()
+    const project = await Project.findById(id)
+      .populate('skillIds')
+      .populate('relatedProjectIds', '_id title type thumbnailId')
+      .lean()
     if (!project) return fail(404, 'Project not found')
     return ok(project, 'Project fetched successfully')
   }

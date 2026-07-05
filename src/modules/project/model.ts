@@ -15,14 +15,29 @@ const i18nText = t.Object({
   en: t.String({ maxLength: 2000 }),
 })
 
+export const ProjectType = {
+  FRONTEND: 'FRONTEND',
+  BACKEND: 'BACKEND',
+  FULLSTACK: 'FULLSTACK',
+} as const
+
+export type ProjectType = typeof ProjectType[keyof typeof ProjectType]
+
 export const projectCreate = t.Object({
   title: i18nString,
   description: t.Optional(i18nText),
   skillIds: t.Optional(t.Array(objectId)),
+  relatedProjectIds: t.Optional(t.Array(objectId)),
   thumbnailId: t.Optional(t.String({ maxLength: 255 })),
   link: t.Optional(t.String({ maxLength: 500 })),
   screenshots: t.Optional(t.Array(t.String({ maxLength: 255 }))),
   projectYear: t.Optional(t.Number({ minimum: 1990, maximum: 2100 })),
+  type: t.Optional(t.Union([
+    t.Literal('FRONTEND'),
+    t.Literal('BACKEND'),
+    t.Literal('FULLSTACK'),
+  ])),
+  githubRepoUrl: t.Optional(t.String({ maxLength: 500 })),
 })
 
 export const projectUpdate = t.Partial(projectCreate)
@@ -41,10 +56,13 @@ export interface IProject {
   title: II18nString
   description?: II18nString
   skillIds: mongoose.Types.ObjectId[]
+  relatedProjectIds: mongoose.Types.ObjectId[]
   thumbnailId?: string
   link?: string
   screenshots: string[]
   projectYear: number
+  type?: ProjectType
+  githubRepoUrl?: string
 }
 
 const I18nStringSchema = new Schema<II18nString>({
@@ -57,10 +75,13 @@ const ProjectSchema = new Schema<IProject>(
     title: { type: I18nStringSchema, required: true },
     description: { type: I18nStringSchema },
     skillIds: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
+    relatedProjectIds: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
     thumbnailId: { type: String },
     link: { type: String },
     screenshots: [{ type: String }],
     projectYear: { type: Number, required: true, default: new Date().getFullYear() },
+    type: { type: String, enum: ['FRONTEND', 'BACKEND', 'FULLSTACK'] },
+    githubRepoUrl: { type: String },
   },
   { timestamps: true }
 )

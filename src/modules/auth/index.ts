@@ -15,8 +15,13 @@ export const authModule = new Elysia({ prefix: '/auth' })
   )
   .use(
     rateLimit({
-      duration: 60 * 1000, // 1 minute window
-      max: 10,             // max 10 attempts per IP per window
+      duration: 60 * 1000,
+      max: 10,
+      generator: (req, server) =>
+        server?.requestIP(req)?.address ??
+        req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+        req.headers.get('x-real-ip') ??
+        'unknown',
       errorResponse: new Response(
         JSON.stringify({ success: false, message: 'Too many login attempts, please try again later', data: null }),
         { status: 429, headers: { 'Content-Type': 'application/json' } }
