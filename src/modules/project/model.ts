@@ -1,27 +1,13 @@
 import { t } from 'elysia'
 import mongoose, { Schema } from 'mongoose'
+import { i18nString, i18nText, I18nStringSchema } from '../../libs/i18n'
+import type { IProject } from './types'
+
+export { ProjectType } from './types'
 
 // ─── TypeBox (Elysia validation) ─────────────────────────────────────────────
 
 const objectId = t.String({ pattern: '^[0-9a-fA-F]{24}$' })
-
-const i18nString = t.Object({
-  id: t.String({ maxLength: 200 }),
-  en: t.String({ maxLength: 200 }),
-})
-
-const i18nText = t.Object({
-  id: t.String({ maxLength: 2000 }),
-  en: t.String({ maxLength: 2000 }),
-})
-
-export const ProjectType = {
-  FRONTEND: 'FRONTEND',
-  BACKEND: 'BACKEND',
-  FULLSTACK: 'FULLSTACK',
-} as const
-
-export type ProjectType = typeof ProjectType[keyof typeof ProjectType]
 
 export const projectCreate = t.Object({
   title: i18nString,
@@ -38,6 +24,7 @@ export const projectCreate = t.Object({
     t.Literal('FULLSTACK'),
   ])),
   githubRepoUrl: t.Optional(t.String({ maxLength: 500 })),
+  sortOrder: t.Optional(t.Union([t.Integer({ minimum: 1 }), t.Null()])),
 })
 
 export const projectUpdate = t.Partial(projectCreate)
@@ -46,29 +33,6 @@ export type ProjectCreate = typeof projectCreate.static
 export type ProjectUpdate = typeof projectUpdate.static
 
 // ─── Mongoose ────────────────────────────────────────────────────────────────
-
-export interface II18nString {
-  id: string
-  en: string
-}
-
-export interface IProject {
-  title: II18nString
-  description?: II18nString
-  skillIds: mongoose.Types.ObjectId[]
-  relatedProjectIds: mongoose.Types.ObjectId[]
-  thumbnailId?: string
-  link?: string
-  screenshots: string[]
-  projectYear: number
-  type?: ProjectType
-  githubRepoUrl?: string
-}
-
-const I18nStringSchema = new Schema<II18nString>({
-  id: { type: String, required: true },
-  en: { type: String, required: true },
-}, { _id: false })
 
 const ProjectSchema = new Schema<IProject>(
   {
@@ -82,6 +46,7 @@ const ProjectSchema = new Schema<IProject>(
     projectYear: { type: Number, required: true, default: new Date().getFullYear() },
     type: { type: String, enum: ['FRONTEND', 'BACKEND', 'FULLSTACK'] },
     githubRepoUrl: { type: String },
+    sortOrder: { type: Number, default: null },
   },
   { timestamps: true }
 )

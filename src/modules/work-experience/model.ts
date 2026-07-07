@@ -1,16 +1,25 @@
 import { t } from 'elysia'
 import { Schema, model } from 'mongoose'
+import { i18nString, i18nText, I18nStringSchema } from '../../libs/i18n'
+import type { IWorkExperience } from './types'
 
 // ─── TypeBox (Elysia validation) ─────────────────────────────────────────────
 
 export const workExperienceCreate = t.Object({
-  role: t.String({ maxLength: 150 }),
-  company: t.String({ maxLength: 150 }),
+  role: i18nString,
+  company: i18nString,
   companyUrl: t.Optional(t.String({ maxLength: 500 })),
   startDate: t.String({ format: 'date-time' }),
   endDate: t.Optional(t.String({ format: 'date-time' })),
   current: t.Optional(t.Boolean()),
-  description: t.String({ maxLength: 3000 }),
+  description: i18nText,
+  keyProjects: t.Optional(t.Array(
+    t.Object({
+      title: i18nString,
+      description: i18nText,
+    }),
+    { maxItems: 20 }
+  )),
   tags: t.Optional(t.Array(t.String({ maxLength: 50 }), { maxItems: 20 })),
 })
 
@@ -21,26 +30,22 @@ export type WorkExperienceUpdate = typeof workExperienceUpdate.static
 
 // ─── Mongoose ────────────────────────────────────────────────────────────────
 
-export interface IWorkExperience {
-  role: string
-  company: string
-  companyUrl?: string
-  startDate: Date
-  endDate?: Date
-  current: boolean
-  description: string
-  tags: string[]
-}
-
 const WorkExperienceSchema = new Schema<IWorkExperience>(
   {
-    role: { type: String, required: true },
-    company: { type: String, required: true },
+    role: { type: I18nStringSchema, required: true },
+    company: { type: I18nStringSchema, required: true },
     companyUrl: { type: String },
     startDate: { type: Date, required: true },
     endDate: { type: Date },
     current: { type: Boolean, default: false },
-    description: { type: String, required: true },
+    description: { type: I18nStringSchema, required: true },
+    keyProjects: [
+      {
+        title: { type: I18nStringSchema, required: true },
+        description: { type: I18nStringSchema, required: true },
+        _id: false,
+      },
+    ],
     tags: [{ type: String }],
   },
   { timestamps: true }

@@ -7,6 +7,15 @@ export abstract class ProjectService {
       .populate('skillIds')
       .populate('relatedProjectIds', '_id title type thumbnailId')
       .lean()
+
+    // nulls last — projects with a sortOrder come first, then unordered ones
+    projects.sort((a, b) => {
+      if (a.sortOrder == null && b.sortOrder == null) return 0
+      if (a.sortOrder == null) return 1
+      if (b.sortOrder == null) return -1
+      return a.sortOrder - b.sortOrder
+    })
+
     return ok(projects, 'Projects fetched successfully')
   }
 

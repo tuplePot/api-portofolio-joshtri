@@ -1,15 +1,17 @@
 import { t } from 'elysia'
 import { Schema, model } from 'mongoose'
+import { i18nString, i18nText, I18nStringSchema } from '../../libs/i18n'
+import type { IEducation } from './types'
 
 // ─── TypeBox (Elysia validation) ─────────────────────────────────────────────
 
 export const educationCreate = t.Object({
-  degree: t.String({ maxLength: 200 }),
-  school: t.String({ maxLength: 200 }),
+  degree: i18nString,
+  school: i18nString,
   startYear: t.Number({ minimum: 1950, maximum: 2100 }),
   endYear: t.Optional(t.Number({ minimum: 1950, maximum: 2100 })),
   gpa: t.Optional(t.String({ maxLength: 10 })),
-  description: t.String({ maxLength: 3000 }),
+  description: i18nText,
 })
 
 export const educationUpdate = t.Partial(educationCreate)
@@ -19,23 +21,14 @@ export type EducationUpdate = typeof educationUpdate.static
 
 // ─── Mongoose ────────────────────────────────────────────────────────────────
 
-export interface IEducation {
-  degree: string
-  school: string
-  startYear: number
-  endYear?: number
-  gpa?: string
-  description: string
-}
-
 const EducationSchema = new Schema<IEducation>(
   {
-    degree: { type: String, required: true },
-    school: { type: String, required: true },
+    degree: { type: I18nStringSchema, required: true },
+    school: { type: I18nStringSchema, required: true },
     startYear: { type: Number, required: true },
     endYear: { type: Number },
     gpa: { type: String },
-    description: { type: String, required: true },
+    description: { type: I18nStringSchema, required: true },
   },
   { timestamps: true }
 )
