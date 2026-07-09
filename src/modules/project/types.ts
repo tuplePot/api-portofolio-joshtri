@@ -21,4 +21,9 @@ export interface IProject {
   type?: ProjectType
   githubRepoUrl?: string
   sortOrder?: number | null
+  role?: II18nString
+  problemSolved?: II18nString
+  highlights?: II18nString[]
+  status?: 'LIVE' | 'ARCHIVED' | 'WIP'
+  featured?: boolean
 }

@@ -3,6 +3,7 @@ import { cors } from '@elysiajs/cors'
 import { helmet } from 'elysia-helmet'
 import { connectDB, mongoosePlugin } from './libs/mongoose'
 import { apiKeyPlugin } from './libs/apiKey'
+import { log } from './libs/logger'
 import { authModule } from './modules/auth'
 import { skillModule } from './modules/skill'
 import { projectModule } from './modules/project'
@@ -11,6 +12,7 @@ import { educationModule } from './modules/education'
 import { docsModule } from './modules/docs'
 import { lookupModule } from './modules/lookup'
 import { deployModule } from './modules/deploy'
+import { aiModule } from './modules/ai'
 
 const REQUIRED_ENV = ['DATABASE_URL', 'JWT_SECRET', 'API_KEY'] as const
 for (const key of REQUIRED_ENV) {
@@ -29,7 +31,11 @@ const allowedOrigins = [
 const app = new Elysia()
   .use(helmet())
   .use(cors({ origin: allowedOrigins, credentials: true }))
+  // Structured request logging + `ctx.log` inside handlers. Skip the root
+  // route, which is just a 404 probe and would spam the logs.
+  .use(log.into({ autoLogging: { ignore: (ctx) => ctx.path === '/' } }))
   .onError(({ error, set, code }) => {
+    log.error({ code, err: error }, 'request failed')
     if (code === 'VALIDATION') {
       set.status = 422
       return { success: false, message: error.message, data: null }
@@ -70,6 +76,7 @@ const app = new Elysia()
       .use(workExperienceModule)
       .use(educationModule)
       .use(deployModule)
+      .use(aiModule)
   )
 
 export default app

@@ -25,6 +25,17 @@ export const projectCreate = t.Object({
   ])),
   githubRepoUrl: t.Optional(t.String({ maxLength: 500 })),
   sortOrder: t.Optional(t.Union([t.Integer({ minimum: 1 }), t.Null()])),
+  // Depth fields — richer signal for the AI assistant (GET_PROJECT, COMPARE,
+  // STRONGEST). All optional / backfilled over time.
+  role: t.Optional(i18nString),
+  problemSolved: t.Optional(i18nText),
+  highlights: t.Optional(t.Array(i18nString, { maxItems: 10 })),
+  status: t.Optional(t.Union([
+    t.Literal('LIVE'),
+    t.Literal('ARCHIVED'),
+    t.Literal('WIP'),
+  ])),
+  featured: t.Optional(t.Boolean()),
 })
 
 export const projectUpdate = t.Partial(projectCreate)
@@ -47,6 +58,11 @@ const ProjectSchema = new Schema<IProject>(
     type: { type: String, enum: ['FRONTEND', 'BACKEND', 'FULLSTACK'] },
     githubRepoUrl: { type: String },
     sortOrder: { type: Number, default: null },
+    role: { type: I18nStringSchema },
+    problemSolved: { type: I18nStringSchema },
+    highlights: [{ type: I18nStringSchema }],
+    status: { type: String, enum: ['LIVE', 'ARCHIVED', 'WIP'] },
+    featured: { type: Boolean, default: false },
   },
   { timestamps: true }
 )
