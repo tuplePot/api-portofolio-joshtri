@@ -13,10 +13,10 @@ const openrouter = new OpenRouter({
 // multilingual (ID+EN) strength. Override the primary via OPENROUTER_MODEL.
 const FREE_MODELS = [
   process.env.OPENROUTER_MODEL,
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'qwen/qwen3-next-80b-a3b-instruct:free',
+  // 'meta-llama/llama-3.3-70b-instruct:free',
+  // 'qwen/qwen3-next-80b-a3b-instruct:free',
   'google/gemma-4-31b-it:free',
-  'nousresearch/hermes-3-llama-3.1-405b:free',
+  // 'nousresearch/hermes-3-llama-3.1-405b:free',
 ].filter((m): m is string => Boolean(m))
 
 const MAX_RETRY_WAIT_MS = 3000
