@@ -17,6 +17,9 @@ export const authModule = new Elysia({ prefix: '/auth' })
     rateLimit({
       duration: 60 * 1000,
       max: 10,
+      // Only apply to the login route — elysia-rate-limit hooks run globally
+      // and would otherwise throttle unrelated routes like GET /api/projects.
+      skip: (req) => !new URL(req.url).pathname.endsWith('/auth/login'),
       generator: (req, server) =>
         server?.requestIP(req)?.address ??
         req.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
