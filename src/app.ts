@@ -65,6 +65,7 @@ const app = new Elysia()
   .use(mongoosePlugin)
   // Root returns 404 — nothing to see here
   .get('/', ({ set }) => { set.status = 404; return null })
+  .get('/health', () => ({ status: 'ok', service: 'cms-portfolio', timestamp: new Date().toISOString() }))
   // Docs only available in development
   .use(isProd ? new Elysia() : docsModule)
   .group('/api', (app) =>
