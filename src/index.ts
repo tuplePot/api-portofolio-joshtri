@@ -1,6 +1,7 @@
 import app from './app'
-import { log } from './libs/logger'
+import { env } from './config'
+import { log } from './plugins'
 
-app.listen({ port: Number(process.env.PORT ?? 3000), hostname: '127.0.0.1' })
+app.listen(env.port)
 
 log.info(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`)

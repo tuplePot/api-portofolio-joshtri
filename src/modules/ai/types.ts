@@ -1,9 +1,8 @@
-import type { II18nString } from '../../libs/i18n'
+import type { II18nString } from '../../shared'
 
-// ─── OpenRouter ──────────────────────────────────────────────────────────────
+// ─── Groq ──────────────────────────────────────────────────────────────────
 
-export interface OpenRouterError {
-  data$?: unknown
+export interface GroqError {
   body?: unknown
   error?: unknown
   message?: string

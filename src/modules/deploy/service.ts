@@ -1,8 +1,9 @@
-import { ok, fail } from '../../libs/response'
+import { ok, fail } from '../../shared'
+import { env } from '../../config'
 
 export abstract class DeployService {
   static async trigger() {
-    const hookUrl = process.env.DEPLOY_HOOK_URL
+    const hookUrl = env.deployHookUrl
     if (!hookUrl) return fail(503, 'Deploy hook is not configured (set DEPLOY_HOOK_URL)')
 
     try {

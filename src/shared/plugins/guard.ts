@@ -1,11 +1,14 @@
 import { Elysia, status } from 'elysia'
 import { jwt as jwtPlugin } from '@elysiajs/jwt'
+import { env } from '../../config'
 
-export const guard = new Elysia({ name: 'guard' })
+// JWT guard — verifies the Authorization: Bearer <token> header and exposes
+// the decoded `user` on the context. Use inside a `.guard({}, (app) => ...)`.
+export const guard = new Elysia({ name: 'shared.guard' })
   .use(
     jwtPlugin({
       name: 'jwt',
-      secret: process.env.JWT_SECRET!,
+      secret: env.jwtSecret,
       exp: '7d',
     })
   )

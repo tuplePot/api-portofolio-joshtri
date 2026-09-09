@@ -3,13 +3,14 @@ import { jwt as jwtPlugin } from '@elysiajs/jwt'
 import { rateLimit } from 'elysia-rate-limit'
 import { loginBody, type LoginBody } from './model'
 import { AuthService } from './service'
-import { fail, ok } from '../../libs/response'
+import { env } from '../../config'
+import { fail, ok } from '../../shared'
 
 export const authModule = new Elysia({ prefix: '/auth' })
   .use(
     jwtPlugin({
       name: 'jwt',
-      secret: process.env.JWT_SECRET!,
+      secret: env.jwtSecret,
       exp: '7d',
     })
   )
@@ -45,5 +46,12 @@ export const authModule = new Elysia({ prefix: '/auth' })
 
       return ok({ token }, 'Login successful')
     },
-    { body: loginBody }
+    {
+      body: loginBody,
+      detail: {
+        summary: 'Login and get a JWT token',
+        description: 'Exchanges admin email + password for a 7-day JWT. Send it as `Authorization: Bearer <token>` on protected routes.',
+        tags: ['Auth'],
+      },
+    }
   )

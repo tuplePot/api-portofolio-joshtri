@@ -1,6 +1,6 @@
 import { t } from 'elysia'
 import { Schema, model } from 'mongoose'
-import { i18nString, i18nText, I18nStringSchema } from '../../libs/i18n'
+import { i18nString, i18nText, I18nStringSchema } from '../../shared'
 import type { IEducation } from './types'
 
 // ─── TypeBox (Elysia validation) ─────────────────────────────────────────────

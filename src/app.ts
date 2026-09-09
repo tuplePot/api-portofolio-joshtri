@@ -1,39 +1,37 @@
 import { Elysia } from 'elysia'
-import { cors } from '@elysiajs/cors'
 import { helmet } from 'elysia-helmet'
-import { connectDB, mongoosePlugin } from './libs/mongoose'
-import { apiKeyPlugin } from './libs/apiKey'
-import { log } from './libs/logger'
+import { connectDB, mongoosePlugin } from './database'
+import { isProd } from './config'
+import { apiKeyPlugin, corsPlugin, loggerPlugin, openapiGuardPlugin, openapiPlugin, log } from './plugins'
 import { authModule } from './modules/auth'
 import { skillModule } from './modules/skill'
 import { projectModule } from './modules/project'
 import { workExperienceModule } from './modules/work-experience'
 import { educationModule } from './modules/education'
-import { docsModule } from './modules/docs'
 import { lookupModule } from './modules/lookup'
 import { deployModule } from './modules/deploy'
 import { aiModule } from './modules/ai'
 
-const REQUIRED_ENV = ['DATABASE_URL', 'JWT_SECRET', 'API_KEY'] as const
-for (const key of REQUIRED_ENV) {
-  if (!process.env[key]) throw new Error(`Missing required environment variable: ${key}`)
-}
-
-const isProd = process.env.NODE_ENV === 'production'
-
-const allowedOrigins = [
-  'http://localhost:4321',
-  'http://localhost:5173',
-  'http://localhost:5174',
-  ...(process.env.FRONTEND_URLS?.split(',').map(url => url.trim()) ?? []),
-].filter((o): o is string => Boolean(o))
-
 const app = new Elysia()
-  .use(helmet())
-  .use(cors({ origin: allowedOrigins, credentials: true }))
-  // Structured request logging + `ctx.log` inside handlers. Skip the root
-  // route, which is just a 404 probe and would spam the logs.
-  .use(log.into({ autoLogging: { ignore: (ctx) => ctx.path === '/' } }))
+  .use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          connectSrc: ["'self'"],
+          fontSrc: ["'self'", 'https://cdn.jsdelivr.net'],
+          objectSrc: ["'none'"],
+          mediaSrc: ["'self'"],
+          frameSrc: ["'none'"],
+        },
+      },
+    }),
+  )
+  .use(corsPlugin)
+  .use(loggerPlugin)
   .onError(({ error, set, code }) => {
     log.error({ code, err: error }, 'request failed')
     if (code === 'VALIDATION') {
@@ -65,9 +63,11 @@ const app = new Elysia()
   .use(mongoosePlugin)
   // Root returns 404 — nothing to see here
   .get('/', ({ set }) => { set.status = 404; return null })
+  .get('/favicon.ico', ({ set }) => { set.status = 204; return null })
   .get('/health', () => ({ status: 'ok', service: 'cms-portfolio', timestamp: new Date().toISOString() }))
-  // Docs only available in development
-  .use(isProd ? new Elysia() : docsModule)
+  // OpenAPI docs — admin-guarded (login at /openapi/_/gate), safe in prod
+  .use(openapiGuardPlugin)
+  .use(openapiPlugin)
   .group('/api', (app) =>
     app
       .use(authModule)

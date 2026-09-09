@@ -1,10 +1,9 @@
 import { Elysia, t } from 'elysia'
 import { AiService } from './ai.service'
 import { SUGGESTED_QUESTIONS } from './suggestions'
-import { ok, fail } from '../../libs/response'
-import { createRateLimiter, getClientIp } from '../../libs/rateLimit'
+import { ok, fail, createRateLimiter, getClientIp } from '../../shared'
 
-// Public endpoint → cap per visitor so nobody can drain the OpenRouter quota.
+// Public endpoint → cap per visitor so nobody can drain the Groq quota.
 const askLimiter = createRateLimiter({ windowMs: 60_000, max: 15 })
 
 export const aiModule = new Elysia({ prefix: '/ai' })
@@ -27,12 +26,25 @@ export const aiModule = new Elysia({ prefix: '/ai' })
           return fail(429, 'Too many requests — please slow down and try again shortly.')
         }
       },
+      detail: {
+        summary: 'Ask the portfolio AI assistant',
+        description: 'Intent → business logic → structured context → 1 LLM call. Rate-limited to 15/min/IP.',
+        tags: ['AI Assistant'],
+      },
     },
   )
   // Starter questions for the chat UI (bilingual).
-  .get('/suggestions', () => ok(SUGGESTED_QUESTIONS, 'ok'))
-  // Liveness check for the OpenRouter key/connection.
-  .get('/health/openrouter', async () => {
-    const connected = await AiService.checkConnection()
-    return ok({ connected }, 'ok')
-  })
+  .get(
+    '/suggestions',
+    () => ok(SUGGESTED_QUESTIONS, 'ok'),
+    { detail: { summary: 'Suggested starter questions', tags: ['AI Assistant'] } },
+  )
+  // Liveness check for the Groq key/connection.
+  .get(
+    '/health/groq',
+    async () => {
+      const connected = await AiService.checkConnection()
+      return ok({ connected }, 'ok')
+    },
+    { detail: { summary: 'Groq API connectivity check', tags: ['AI Assistant'] } },
+  )

@@ -1,5 +1,5 @@
 import { Project, type ProjectCreate, type ProjectUpdate } from './model'
-import { ok, fail } from '../../libs/response'
+import { ok, fail } from '../../shared'
 
 export abstract class ProjectService {
   static async findAll() {

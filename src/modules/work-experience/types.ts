@@ -1,4 +1,4 @@
-import type { II18nString } from '../../libs/i18n'
+import type { II18nString } from '../../shared'
 
 export interface IKeyProject {
   title: II18nString

@@ -1,5 +1,5 @@
 import { Education, type EducationCreate, type EducationUpdate } from './model'
-import { ok, fail } from '../../libs/response'
+import { ok, fail } from '../../shared'
 
 export abstract class EducationService {
   static async findAll() {

@@ -1,7 +1,7 @@
 import { matchIntent } from './intent.service'
 import { PortfolioService } from './portfolio.service'
 import { PortfolioRepository } from './portfolio.repository'
-import { chat, checkConnection } from './openrouter.client'
+import { chat, checkConnection } from './groq.client'
 import {
   buildMessages,
   fmtProject,

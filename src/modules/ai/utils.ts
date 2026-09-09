@@ -1,7 +1,7 @@
-import type { II18nString } from '../../libs/i18n'
-import type { OpenRouterError } from './types'
+import type { II18nString } from '../../shared'
+import type { GroqError } from './types'
 
-export function isOpenRouterError(e: unknown): e is OpenRouterError {
+export function isGroqError(e: unknown): e is GroqError {
   return typeof e === 'object' && e !== null
 }
 

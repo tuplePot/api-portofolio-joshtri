@@ -1,5 +1,5 @@
 import { pick } from './utils'
-import type { ChatMessage } from './openrouter.client'
+import type { ChatMessage } from './groq.client'
 import type {
   ProjectView,
   SkillView,

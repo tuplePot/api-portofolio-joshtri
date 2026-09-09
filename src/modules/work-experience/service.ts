@@ -1,5 +1,5 @@
 import { WorkExperience, type WorkExperienceCreate, type WorkExperienceUpdate } from './model'
-import { ok, fail } from '../../libs/response'
+import { ok, fail } from '../../shared'
 
 export abstract class WorkExperienceService {
   static async findAll() {

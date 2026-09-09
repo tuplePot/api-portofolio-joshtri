@@ -1,6 +1,6 @@
 import { t } from 'elysia'
 import mongoose, { Schema } from 'mongoose'
-import { i18nString, i18nText, I18nStringSchema } from '../../libs/i18n'
+import { i18nString, i18nText, I18nStringSchema } from '../../shared'
 import type { IProject } from './types'
 
 export { ProjectType } from './types'

@@ -4,13 +4,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "seed": "bun run src/seed.ts"
+    "seed": "bun run src/scripts/seed.ts"
   },
   "dependencies": {
     "@bogeychan/elysia-logger": "^0.1.10",
+    "@elysia/openapi": "^1.4.16",
     "@elysiajs/cors": "^1.4.2",
     "@elysiajs/jwt": "^1.4.2",
-    "@openrouter/sdk": "^0.13.32",
     "appwrite": "^26.1.0",
     "elysia": "latest",
     "elysia-helmet": "^3.1.0",

@@ -1,5 +1,5 @@
 import { Skill, type SkillCreate, type SkillUpdate } from './model'
-import { ok, fail } from '../../libs/response'
+import { ok, fail } from '../../shared'
 
 export abstract class SkillService {
   static async findAll() {

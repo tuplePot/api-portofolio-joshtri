@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import type { II18nString } from '../../libs/i18n'
+import type { II18nString } from '../../shared'
 
 export const ProjectType = {
   FRONTEND: 'FRONTEND',
