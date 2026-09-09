@@ -26,10 +26,12 @@ export abstract class KeepaliveService {
       return result
     }
 
+    // Normalize: strip trailing /v1 so we don't get /v1/v1/health
+    const base = env.appwriteEndpoint.replace(/\/v1\/?$/, '')
+
     const start = performance.now()
     try {
-      // Ping the Appwrite health endpoint — lightweight, no data touched.
-      const res = await fetch(`${env.appwriteEndpoint}/v1/health`, {
+      const res = await fetch(`${base}/v1/health`, {
         headers: {
           'x-appwrite-project': env.appwriteProjectId,
           'x-appwrite-key': env.appwriteApiKey,
