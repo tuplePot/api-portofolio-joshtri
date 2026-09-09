@@ -5,12 +5,14 @@ import { env } from '../config'
 // directly from the public portfolio site, so they must stay open. Everything
 // under /openapi is opened directly in a browser (can't send headers) and is
 // protected separately by openapiGuardPlugin (admin login), so the API-key
-// check skips the whole prefix.
+// check skips the whole prefix. The keepalive/cron path is hit by Vercel Cron
+// and is protected by its own cron-secret header check instead.
 const PUBLIC_PATHS = [
   '/health',
   '/api/ai/ask',
   '/api/ai/suggestions',
   '/api/ai/health/groq',
+  '/api/keepalive/cron',
 ]
 
 export const apiKeyPlugin = new Elysia({ name: 'plugin.apiKey' })

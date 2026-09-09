@@ -11,6 +11,7 @@ import { educationModule } from './modules/education'
 import { lookupModule } from './modules/lookup'
 import { deployModule } from './modules/deploy'
 import { aiModule } from './modules/ai'
+import { keepaliveModule } from './modules/keepalive'
 
 const app = new Elysia()
   .use(
@@ -78,6 +79,7 @@ const app = new Elysia()
       .use(educationModule)
       .use(deployModule)
       .use(aiModule)
+      .use(keepaliveModule)
   )
 
 export default app

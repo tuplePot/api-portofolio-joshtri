@@ -3,5 +3,11 @@
   "bunVersion": "1.x",
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index" }
+  ],
+  "crons": [
+    {
+      "path": "/api/keepalive/cron",
+      "schedule": "0 */6 * * *"
+    }
   ]
 }

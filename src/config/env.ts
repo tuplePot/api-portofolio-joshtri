@@ -16,7 +16,7 @@ export const env = {
   apiKey: process.env.API_KEY ?? '',
   // Comma-separated list of allowed CORS origins (production frontend URLs).
   frontendUrls: process.env.FRONTEND_URLS ?? '',
-  // Optional deploy hook URL (Vercel/Netlify/Cloudflare) for the "Publish Site" button.
+  // Optional deploy hook URL (Vercel/Netlify/Cloudflare) for the Publish Site button.
   deployHookUrl: process.env.DEPLOY_HOOK_URL ?? '',
   // AI assistant — Groq. Optional GROQ_MODEL overrides the primary model.
   groqApiKey: process.env.GROQ_API_KEY ?? '',
@@ -26,6 +26,12 @@ export const env = {
   seedPassword: process.env.SEED_PASSWORD ?? '',
   // Production deploy URL — used as the OpenAPI server url when set.
   prodUrl: process.env.PROD_URL ?? '',
+  // Appwrite keepalive — pings your Appwrite project so it doesn't pause.
+  appwriteEndpoint: process.env.APPWRITE_ENDPOINT ?? '',
+  appwriteProjectId: process.env.APPWRITE_PROJECT_ID ?? '',
+  appwriteApiKey: process.env.APPWRITE_API_KEY ?? '',
+  // Secret to verify Vercel cron requests.
+  cronSecret: process.env.CRON_SECRET ?? '',
 } as const
 
 export const isProd = env.nodeEnv === 'production'
